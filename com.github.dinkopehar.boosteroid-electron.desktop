@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Boosteroid
+Comment=Boosteroid cloud gaming platform
+Type=Application
+Exec=/opt/boosteroid-electron/boosteroid-electron
+Icon=boosteroid
+Categories=Game;
+Terminal=false
+Keywords=Game;Streaming;Boosteroid;
