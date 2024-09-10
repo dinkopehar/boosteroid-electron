@@ -1,6 +1,7 @@
 {
   "name": "boosteroid-electron",
   "version": "1.0.0",
+  "appId": "com.github.dinkopehar.${name}",
   "description": "Electron wrapper for Boosteroid",
   "main": "src/main.js",
   "scripts": {
@@ -8,7 +9,6 @@
     "build": "electron-builder --publish never"
   },
   "build": {
-    "asar": false,
     "linux": {
       "target": [
         "zip",
