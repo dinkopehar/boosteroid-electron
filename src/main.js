@@ -43,7 +43,6 @@ switch (config.crashCount) {
 }
 
 function createWindow() {
-  // Create the browser window.
   const mainWindow = new BrowserWindow({
     fullscreenable: true,
     webPreferences: {
@@ -53,16 +52,13 @@ function createWindow() {
     },
   });
 
-  // and load the index.html of the app.
-  mainWindow.loadURL(homePage);
+  mainWindow.webContents.setWindowOpenHandler(() => {
+    return { action: "deny" };
+  });
 
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.loadURL(homePage);
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   createWindow();
 
@@ -84,16 +80,12 @@ app.whenReady().then(() => {
     app.quit();
   });
 
-  electronLocalshortcut.register("Alt+Home", async () => {
-    BrowserWindow.getAllWindows()[0].loadURL(homePage);
-  });
-
   electronLocalshortcut.register("F4", async () => {
     app.quit();
   });
 
   electronLocalshortcut.register("Control+Shift+I", () => {
-    BrowserWindow.getAllWindows()[0].webContents.toggleDevTools();
+    BrowserWindow.getFocusedWindow().webContents.toggleDevTools();
   });
 });
 
@@ -102,14 +94,9 @@ app.on("browser-window-created", async function (e, window) {
   window.setMenu(null);
 
   window.webContents.setUserAgent(userAgent);
-
-  window.webContents.on("new-window", (event, url) => {
-    event.preventDefault();
-    BrowserWindow.getAllWindows()[0].loadURL(url);
-  });
 });
 
-app.on("child-process-gone", (event, details) => {
+app.on("child-process-gone", async (event, details) => {
   if (details.type === "GPU" && details.reason === "crashed") {
     config.crashCount++;
     fs.writeFileSync(configPath, JSON.stringify(config));
@@ -123,16 +110,9 @@ app.on("child-process-gone", (event, details) => {
   }
 });
 
-app.on("will-quit", async () => {
-  electronLocalshortcut.unregisterAll();
-});
-
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on("window-all-closed", function () {
   if (process.platform !== "darwin") app.quit();
 });
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
