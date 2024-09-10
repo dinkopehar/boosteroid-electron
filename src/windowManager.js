@@ -13,9 +13,25 @@ function toggleFullscreen(state) {
       console.log("Fullscreen state changed to: " + state);
 
       if (state) {
+        window.webContents
+          .executeJavaScript("window.document.body.requestPointerLock();")
+          .then(() => {
+            console.log("pointer is locked");
+          })
+          .catch((err) => {
+            console.log("error locking pointer", err);
+          });
+      } else {
         window.webContents.executeJavaScript(
-          "window.document.body.requestPointerLock();",
+          "window.document.exitPointerLock();",
         );
+      }
+    } else {
+      window.setFullScreen(state);
+      isFullScreen = state;
+      console.log("Fullscreen state changed to: " + state);
+
+      if (state) {
         focusWindow();
       } else {
         window.webContents.executeJavaScript(
@@ -23,19 +39,6 @@ function toggleFullscreen(state) {
         );
       }
     }
-  }
-}
-
-function toggleGameStreamingMode(state) {
-  if (isGameStreamingScreen != state) {
-    isGameStreamingScreen = state;
-    console.log("Game streaming mode state changed to: " + state);
-  }
-
-  toggleFullscreen(isGameStreamingScreen);
-
-  if (state) {
-    focusWindow();
   }
 }
 
@@ -57,9 +60,6 @@ app.on("browser-window-created", async function (event, window) {
     if (isGameStreamingScreen) {
       toggleFullscreen(true);
     }
-  });
-  window.on("page-title-updated", async function (event, title) {
-    toggleGameStreamingMode(title.includes("on GeForce NOW"));
   });
 });
 
