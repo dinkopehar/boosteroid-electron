@@ -6,8 +6,7 @@
   "main": "src/main.js",
   "scripts": {
     "start": "electron --trace-warnings .",
-    "build": "electron-builder --publish never",
-    "buildProduction": "electron-builder --publish always"
+    "build": "electron-builder"
   },
   "build": {
     "linux": {
