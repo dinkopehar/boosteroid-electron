@@ -21,7 +21,7 @@
       "com.github.dinkopehar.${name}.desktop"
     ]
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/dinkopehar/boosteroid-electron",
   "author": "Dinko Pehar <dinko@pehar.dev>",
   "license": "CC0-1.0",
   "devDependencies": {
